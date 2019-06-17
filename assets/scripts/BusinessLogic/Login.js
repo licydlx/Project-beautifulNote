@@ -16,33 +16,16 @@ cc.Class({
      * load 显示页面
      */
     onLoad: function () {
+        this.hall = 'hall';
         this.initEvent();
-        this.identity = null;
-
-        this.loginButton.node.on(cc.Node.EventType.TOUCH_END, function () {
-            // 获取用户输入的参数
-            engine.prototype.init(GLB.channel, GLB.platform, GLB.gameID);
-        },this);
-    },
-    
-    /**
-     * 登录
-     * @param id
-     * @param token
-     */
-    login: function (id, token) {
-        // 设置姓名
-        GLB.name = this.identity || Math.random() * 1000;
-        GLB.userID = id;
-
-        engine.prototype.login(id, token);
+        engine.prototype.init(GLB.channel, GLB.platform, GLB.gameID);
     },
 
-    // 设置个人身份
-    changeIdentity(value) {
-        this.identity = value;
+
+    login() {
+        GLB.name = this.inputName.string ? this.inputName.string : this.inputName.placeholder;
+        engine.prototype.registerUser();
     },
-    
     /**
      * 注册对应的事件监听和把自己的原型传递进入，用于发送事件使用
      */
@@ -60,13 +43,13 @@ cc.Class({
         let eventData = event.data;
         switch (event.type) {
             case msg.MATCHVS_INIT:
-                engine.prototype.registerUser();
+                console.log(event);
                 break;
             case msg.MATCHVS_REGISTER_USER:
-                this.login(eventData.userInfo.id, eventData.userInfo.token);
+                engine.prototype.login(eventData.userInfo.id, eventData.userInfo.token);
                 break;
             case msg.MATCHVS_LOGIN:
-                cc.director.loadScene("hall");
+                cc.director.loadScene(this.hall);
                 break;
         }
     },
@@ -87,5 +70,4 @@ cc.Class({
         this.removeEvent();
         console.log("Login页面销毁");
     },
-
 });

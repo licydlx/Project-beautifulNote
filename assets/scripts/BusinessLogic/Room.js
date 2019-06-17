@@ -49,6 +49,7 @@ cc.Class({
                 this.userList.push(eventData.roomUserInfo);
                 this.initUserView(eventData.roomUserInfo.userProfile,eventData.roomUserInfo.userID,0);
                 break;
+                
             case msg.MATCHVS_ROOM_DETAIL:
                 this.joinRoom(eventData.rsp);
                 for (let i in eventData.rsp.userInfos) {

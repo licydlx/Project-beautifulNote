@@ -82,10 +82,10 @@
     "_level": 0,
     "_components": [
       {
-        "__id__": 18
+        "__id__": 19
       },
       {
-        "__id__": 19
+        "__id__": 20
       }
     ],
     "_prefab": null,
@@ -787,7 +787,11 @@
     "_enabled": true,
     "duration": 0.1,
     "zoomScale": 1.2,
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 18
+      }
+    ],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
     "_N$transition": 3,
@@ -856,6 +860,16 @@
       "__id__": 15
     },
     "_id": "52t9P4hBlEKJoYoZhUJy7P"
+  },
+  {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 2
+    },
+    "component": "",
+    "_componentId": "ba449oU8rFArqKhgBI6yqK1",
+    "handler": "login",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Canvas",
