@@ -6,6 +6,10 @@ cc.Class({
 
     properties: {
         userList :[],
+        playerName:{
+            default:null,
+            type:cc.Prefab
+        }
     },
 
     onLoad () {
@@ -100,12 +104,15 @@ cc.Class({
     initUserView :function(userProfile,userID,owner){
         for(let i = 0; i < this.nameViewList.length; i++) {
             let info = JSON.parse(userProfile);
+
             console.log('initUserView');
             console.log(this.nameViewList[i]);
+
             if (this.nameViewList[i].string === "待加入") {
                 this.nameViewList[i].string = info.name;
                 return;
             }
+
         }
     },
 

@@ -19,9 +19,6 @@ cc.Class({
     },
     // LIFE-CYCLE CALLBACKS:
     onLoad() {
-        // if (GLB.name !== '李冲') {
-        //     this.createRoom.node.active = false;
-        // }
         cc.systemEvent.on(msg.MATCHVS_CREATE_ROOM, this.onEvent, this);
         // 创建房间
         this.createRoom.node.on(cc.Node.EventType.TOUCH_END, function () {
