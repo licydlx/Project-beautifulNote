@@ -21,14 +21,11 @@ cc.Class({
         totalCount: 0
     },
 
-
     onLoad: function () {
         this.content = this.contentFather;
-
         this.initEvent();
         this.getRooomList();
     },
-
 
     getRooomList: function () {
         let RoomFilterEx = new mvs.MsRoomFilterEx();
@@ -42,9 +39,7 @@ cc.Class({
     },
 
     getRoomListExResponse: function (roomListExInfo) {
-        console.log('getRoomListExResponse');
         this.content.removeAllChildren(true);
-
         for (let i = 0; i < roomListExInfo.total; i++) {
             let item = cc.instantiate(this.itemTemplate);
             this.content.addChild(item);
@@ -69,7 +64,6 @@ cc.Class({
         let eventData = event.data;
         switch (event.type) {
             case msg.MATCHVS_ROOM_LIST_EX:
-                console.log(eventData);
                 this.getRoomListExResponse(eventData.rsp);
                 break;
 

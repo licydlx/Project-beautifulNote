@@ -9,6 +9,14 @@ cc.Class({
         playerName:{
             default:null,
             type:cc.Prefab
+        },
+        btnStartGame:{
+            default:null,
+            type:cc.Button
+        },
+        content:{
+            default:null,
+            type:cc.Node  
         }
     },
 
@@ -18,8 +26,6 @@ cc.Class({
         if (GLB.roomID !== "") engine.prototype.getRoomDetail(GLB.roomID);
 
         let self = this;
-        this.nameViewList = [this.labelUserName2];
-
         this.btnStartGame.node.on(cc.Node.EventType.TOUCH_END, function(){
             if (self.userList.length === GLB.MAX_PLAYER_COUNT-1) {
                 let event = {
@@ -47,21 +53,28 @@ cc.Class({
      * @param event
      */
     onEvent (event){
+        
         let eventData = event.data;
         switch(event.type) {
             case msg.MATCHVS_JOIN_ROOM_NOTIFY:
-                this.userList.push(eventData.roomUserInfo);
-                this.initUserView(eventData.roomUserInfo.userProfile,eventData.roomUserInfo.userID,0);
+                console.log('MATCHVS_JOIN_ROOM_NOTIFY')
+                console.log(eventData)
+                console.log(this.content)
+                
+                //this.userList.push(eventData.roomUserInfo);
+                //this.initUserView(eventData.roomUserInfo.userProfile,eventData.roomUserInfo.userID,0);
+                // this.showUser(userProfile,i)
                 break;
                 
             case msg.MATCHVS_ROOM_DETAIL:
+                console.log('MATCHVS_ROOM_DETAIL')
+                console.log(eventData)
                 this.joinRoom(eventData.rsp);
                 for (let i in eventData.rsp.userInfos) {
-                    if (GLB.userID !== eventData.rsp.userInfos[i].userID) {
-                        this.initUserView(eventData.rsp.userInfos[i].userProfile,eventData.rsp.userInfos[i].userID,eventData.rsp.owner);
-                        this.userList.push(eventData.rsp.userInfos[i]);
-                    }
+                    if (GLB.userID !== eventData.rsp.userInfos[i].userID) this.userList.push(eventData.rsp.userInfos[i]);
+                    this.showUser(eventData.rsp.userInfos[i].userProfile,i);
                 }
+
                 break;
             case msg.MATCHVS_SEND_EVENT_NOTIFY:
                 let data = JSON.parse(eventData.eventInfo.cpProto);
@@ -87,33 +100,29 @@ cc.Class({
             GLB.isRoomOwner = false;
             this.btnStartGame.node.active = false;
         }
-        if (GLB.roomID !== "") {
-            this.labelMyRoomID.string = GLB.roomID;
-        } else {
-            this.labelMyRoomID.string = rsp.roomID;
-            GLB.roomID = rsp.roomID;
-        }
 
-        this.labelUserName.string = GLB.name;
+        if (GLB.roomID == "") GLB.roomID = rsp.roomID;
         GLB.mapType = rsp.roomProperty;
+    },
+
+    showUser(userProfile,i){
+        let info = JSON.parse(userProfile);
+        let item = cc.instantiate(this.playerName);
+        let label = item.getComponent(cc.Label);
+        console.log('showUser')
+        console.log(item)
+        console.log(label)
+        let seq = parseInt(i) + 1;
+        label.string = seq + ':' + info.name;
+        this.content.addChild(item);
+        item.setPosition(-300, 270 - 30 * (parseInt(i) + 1));
     },
 
     /**
      * 展示玩家信息
      */
-    initUserView :function(userProfile,userID,owner){
-        for(let i = 0; i < this.nameViewList.length; i++) {
-            let info = JSON.parse(userProfile);
-
-            console.log('initUserView');
-            console.log(this.nameViewList[i]);
-
-            if (this.nameViewList[i].string === "待加入") {
-                this.nameViewList[i].string = info.name;
-                return;
-            }
-
-        }
+    initUserView :function(userProfile,){
+        let info = JSON.parse(userProfile);
     },
 
     /**
