@@ -67,11 +67,11 @@ MatchvsDemoResponse.prototype.initResponse = function (status) {
 MatchvsDemoResponse.prototype.registerUserResponse = function (userInfo) {
     if (userInfo.status === 0) {
         console.log("注册成功");
-        if (userInfo.name !== "") {
-            GLB.name = userInfo.name;
-        } else {
-            GLB.name = userInfo.userID;
-        }
+        // if (userInfo.name !== "") {
+        //     GLB.name = userInfo.name;
+        // } else {
+        //     GLB.name = userInfo.userID;
+        // }
         GLB.avatar = userInfo.avatar;
         GLB.userID = userInfo.userID;
         MatchvsDemoResponse.prototype.sendEventToUI(msg.MATCHVS_REGISTER_USER, { userInfo: userInfo, type: msg.MATCHVS_REGISTER_USER });

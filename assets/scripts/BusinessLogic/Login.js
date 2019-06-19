@@ -23,8 +23,11 @@ cc.Class({
 
 
     login() {
-        GLB.name = this.inputName.string ? this.inputName.string : this.inputName.placeholder;
         engine.prototype.registerUser();
+    },
+
+    addName(v){
+        GLB.name = v;
     },
     /**
      * 注册对应的事件监听和把自己的原型传递进入，用于发送事件使用

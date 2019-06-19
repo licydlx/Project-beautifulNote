@@ -30,5 +30,6 @@
   },
   "use-customize-simulator": false,
   "use-project-simulator-setting": false,
-  "start-scene": "current"
+  "start-scene": "current",
+  "assets-sort-type": "name"
 }
