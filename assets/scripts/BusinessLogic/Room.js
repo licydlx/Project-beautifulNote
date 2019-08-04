@@ -29,7 +29,7 @@ cc.Class({
         this.btnStartGame.node.on(cc.Node.EventType.TOUCH_END, function () {
             console.log('this.btnStartGame')
             console.log(self.userList)
-            if (self.userList.length > 1) {
+            if (self.userList.length > 0) {
                 let event = {
                     action: msg.EVENT_GAME_START,
                 };

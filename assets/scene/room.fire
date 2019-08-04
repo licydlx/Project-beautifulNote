@@ -52,7 +52,6 @@
       "z": 0,
       "w": 1
     },
-    "_zIndex": 0,
     "groupIndex": 0,
     "autoReleaseAssets": true,
     "_id": "a0681f44-8518-4a83-b7c1-7841555deea2"
@@ -130,7 +129,6 @@
     },
     "_skewX": 0,
     "_skewY": 0,
-    "_zIndex": 0,
     "groupIndex": 0,
     "_id": "b6GxUJPaVFGbH6CXWuADJ1"
   },
@@ -191,7 +189,6 @@
     },
     "_skewX": 0,
     "_skewY": 0,
-    "_zIndex": 0,
     "groupIndex": 0,
     "_id": "63+p17nLBM3Z6xMEXcBc6t"
   },
@@ -274,7 +271,6 @@
     },
     "_skewX": 0,
     "_skewY": 0,
-    "_zIndex": 0,
     "groupIndex": 0,
     "_id": "23EfWzIcxDX6oocigYf6dN"
   },
@@ -359,7 +355,6 @@
     },
     "_skewX": 0,
     "_skewY": 0,
-    "_zIndex": 0,
     "groupIndex": 0,
     "_id": "84TGkD33VLr4rz44h3Kv49"
   },
@@ -423,7 +418,6 @@
     },
     "_skewX": 0,
     "_skewY": 0,
-    "_zIndex": 0,
     "groupIndex": 0,
     "_id": "6cmZrIULxBeb5CZlmmA73x"
   },

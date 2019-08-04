@@ -41,6 +41,9 @@ var msg = {
     EVENT_GAIN_SCORE: "gainScore",
     EVENT_PLAYER_POSINTON_CHANGED: "playerPosition",
     GAME_RECONNECT:"Reconnect",
+
+    // 自定义消息
+    VIDEO_READY_TO_PLAY :"VIDEO_READY_TO_PLAY",
 };
 
 module.exports = msg;

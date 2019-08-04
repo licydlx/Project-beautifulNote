@@ -31,19 +31,26 @@ cc.Class({
             default:null,
             type:cc.Button
         },
-        progress:{
-            default:null,
-            type:cc.ProgressBar
-        },
+
         items:{
             default:[],
             type:[cc.Node]
+        },
+
+        personInfo:{
+            default:null,
+            type:cc.Prefab
         }
 
     },
 
     // LIFE-CYCLE CALLBACKS:
     onLoad() {
+        this.phb = this.node.getChildByName("phb");
+        this.zbt = this.node.getChildByName("zbt");
+        this.seq = 0;
+        this.sOnce  = 20;
+
         this.zbList = [];
         this.initEvent();
         engine.prototype.getRoomDetail(GLB.roomID);
@@ -51,9 +58,64 @@ cc.Class({
             this.startButton.node.active = true;
             this.peTotal.node.active = true;
             this.zbTotal.node.active = true;
+            this.phb.active = true;
         } else {
             this.zbButton.node.active = true;
         }
+
+        this.node.on('videoCompleted', this._videoCompleted, this);
+
+    },
+    _callback(){
+        this.time.string = this.sOnce;
+        this.sOnce = this.sOnce - 1;
+        if(this.sOnce < 0){
+            this.unscheduleAllCallbacks();
+            this.time.node.active = false;
+            this.sOnce = 20;
+            this.items[this.seq].destroy();
+
+            this.seq = this.seq + 1;
+            if(this.seq < 2){
+                this.items[this.seq].setPosition(0,0);
+                let videoPlayer =  this.items[this.seq].getChildByName('video').getComponent(cc.VideoPlayer);
+                videoPlayer.play();
+            }
+        }
+    },
+    _videoCompleted(event){
+        console.log('_videoCompleted');
+        console.log(event);
+        let video = this.items[this.seq].getChildByName('video');
+        video.destroy();
+        let question = this.items[this.seq].getChildByName('question');
+        question.active = true;
+
+        this.time.node.active = true;
+        this.schedule(this._callback, 1);
+    },
+    
+    createPhb(name,index){
+        let personInfo = cc.instantiate(this.personInfo);
+        personInfo.parent = this.phb;
+        if(index < 9){
+            let dyX = -420 + index * 105 - 0;
+            personInfo.setPosition(dyX, 60);
+        } else if(index > 8 && index < 18){
+            let dyX = -420 + index * 105 - 945;
+            personInfo.setPosition(dyX, -80);
+        } else {
+            let dyX = -420 + index * 105 - 1890;
+            personInfo.setPosition(dyX, -220);
+        }
+        let nameTag = personInfo.getChildByName('nameTag').getComponent(cc.Label);
+        nameTag.string = name;
+        // let videoTag = personInfo.getChildByName('videoTag').getComponent(cc.Label);
+        // videoTag.string = val.viedo;
+        // let scoreTag = personInfo.getChildByName('scoreTag').getComponent(cc.Label);
+        // scoreTag.string = val.score;
+        // let readyTag = personInfo.getChildByName('readyTag').getComponent(cc.Label);
+        // readyTag.string = val.ready;
     },
 
     update(dt) {
@@ -77,7 +139,6 @@ cc.Class({
     zb(){
         this.explain.destroy();
         this.zbButton.node.destroy();
-        this.progress.node.active = true;
         this.createEmit({
             action:msg.EVENT_PLAYER_ZB
         })
@@ -100,24 +161,16 @@ cc.Class({
         switch (event.type) {
             case msg.MATCHVS_ROOM_DETAIL:
                 console.log('MATCHVS_ROOM_DETAIL');
-
                 console.log(event);
                 GLB.ownew = eventData.rsp.owner;
-                this.peTotal.string = '总人数：' + eventData.rsp.userInfos.length;
-                // for (let i = 0; i < eventData.rsp.userInfos.length; i++) {
-                //     let usrID = eventData.rsp.userInfos[i].userID;
-                //     this.curPlayers[usrID] = this.players[i];
-                //     if (GLB.userID === usrID){
-                //         this.curPlayer = this.players[i];
-                //         if(i == 0){
-                //             let ra2 = this.node.getChildByName("raptorAction2");
-                //             ra2.active = false;
-                //         } else {
-                //             let ra1 = this.node.getChildByName("raptorAction1");
-                //             ra1.active = false;
-                //         }
-                //     } 
-                // }
+                if(GLB.isRoomOwner){
+                    this.peTotal.string = '总人数：' + eventData.rsp.userInfos.length;
+                    this.userInfos = eventData.rsp.userInfos;
+                    this.userInfos.forEach((val,index) => {
+                        let user = JSON.parse(val.userProfile);
+                        this.createPhb(user.name,index);
+                    });
+                }
                 break;
 
             case msg.MATCHVS_SEND_EVENT_RSP:
@@ -136,15 +189,30 @@ cc.Class({
         if (info && info.cpProto) {
             let event = JSON.parse(info.cpProto);
             console.log(event);
+
             if (event.action === msg.EVENT_PLAYER_START) {
-                this.items[0].active = true; 
+                let videoPlayer = this.items[this.seq].getChildByName('video').getComponent(cc.VideoPlayer);
+                this.items[this.seq].setPosition(0,0);
+                videoPlayer.play();
             }
+
             if (event.action === msg.EVENT_PLAYER_ZB) {
                 this.zbList.push(event.userID)
                 console.log(this.zbList);
                 this.zbTotal.string = '准备人数：' + this.zbList.length;
             }
-            
+
+            if (event.action === msg.VIDEO_READY_TO_PLAY) {
+                console.log('onNewWorkGameEvent')
+                if(GLB.isRoomOwner){
+                    this.userInfos.forEach((val,index) => {
+                        if(event.userID == val.userID){
+                            let videoTag = this.phb.children[index].getChildByName('videoTag').getComponent(cc.Label);
+                            videoTag.string = videoTag.string + event.item;
+                        }
+                    });
+                }
+            }  
         }
     },
 
